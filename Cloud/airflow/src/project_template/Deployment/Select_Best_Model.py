@@ -38,21 +38,28 @@ def select_best_model():
     # ADD YOUR CODE HERE
 
     # # Retrieve the best model based on the specified metric
-    # if metric_type=='max':
-    #     runs = client.search_runs(experiment_ids=[client.get_experiment_by_name(experiment).experiment_id],
-    #                             order_by=[f"metrics.{metric} DESC"],max_results=1)
-    # else:
-    #     runs = client.search_runs(experiment_ids=[client.get_experiment_by_name(experiment).experiment_id],
-    #                             order_by=[f"metrics.{metric} ASC"],max_results=1) 
-    
-    
-    # best_run = runs[0].info.run_id
-    # print(f'BEST RUN: {best_run}')
+    if metric_type=='max':
+        runs = client.search_runs(experiment_ids=[client.get_experiment_by_name(experiment).experiment_id],
+                                order_by=[f"metrics.{metric} DESC"],max_results=1)
+        print("DESC ",client.search_runs(experiment_ids=[client.get_experiment_by_name(experiment).experiment_id],
+                                order_by=[f"metrics.{metric} DESC"],max_results=5))
+    else:
+        runs = client.search_runs(experiment_ids=[client.get_experiment_by_name(experiment).experiment_id],
+                                order_by=[f"metrics.{metric} ASC"],max_results=1)
+        print("ASC ",client.search_runs(experiment_ids=[client.get_experiment_by_name(experiment).experiment_id],
+                                order_by=[f"metrics.{metric} ASC"],max_results=5))
 
-    # CHANGE STATE TO PRODUCTION 
-    # best_model = runs[0].data.tags.get("mlflow.runName")  
-    # model_version = client.get_latest_versions(best_model)[0]
+    best_run = runs[0].info.run_id
+    print(f'BEST RUN: {best_run}')
+
+    # CHANGE STATE TO PRODUCTION
+    best_model = runs[0].data.tags.get("mlflow.runName")
+
+    model_version = client.get_latest_versions(best_model)[0]
+
+
 
     # # Transition to Production of the best model obtained
-    # client.transition_model_version_stage(name=best_model, version=model_version.version,stage="Production")
+    client.transition_model_version_stage(name=best_model, version=model_version.version,stage="Production")
 
+#select_best_model()

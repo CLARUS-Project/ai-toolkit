@@ -9,17 +9,28 @@ import requests
 import pandas as pd
 import json
 from io import StringIO
-
+import sys
 import config
+<<<<<<< Updated upstream
 # from IDS_templates.rest_ids_consumer_connector import RestIDSConsumerConnector
+=======
+import subprocess
+def install(package):
+    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+>>>>>>> Stashed changes
 
-def read_data() -> pd.DataFrame:
+def read_data():
+    try:
+        install("openpyxl")
+    except:
+        pass
     """
     The function implements the logic to ingest the data and transform it into a pandas format.
 
     Return:
         A Pandas DataFrame representing the content of the specified file.
     """
+<<<<<<< Updated upstream
 
     # READ DATA FROM IDS
     # ids_consumer = RestIDSConsumerConnector()
@@ -31,6 +42,16 @@ def read_data() -> pd.DataFrame:
     #     config.TRUE_CONNECTOR_CLOUD_PORT
     # )
 
+=======
+    dataframe_test= pd.DataFrame([])
+    #sys.path.append("dags/")
+    #dataframe_test.to_csv("target1.csv")
+    #print("target saved 2")
+>>>>>>> Stashed changes
     # ADD YOUR CODE HERE
+    #sys.path.append("C:/Users/tktuvu/Desktop/ai-toolkit/Cloud/airflow/src/project_template/")
 
-    return pd.DataFrame()
+    #
+    dataframe = pd.read_csv("dags/filtered_set2021tagged.csv")
+    print(dataframe)
+    return dataframe

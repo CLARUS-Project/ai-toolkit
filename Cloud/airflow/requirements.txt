@@ -2,3 +2,6 @@ mlflow
 numpy
 pandas
 scikit-learn
+tensorflow==2.10.1
+openpyxl
+protobuf==3.19.6

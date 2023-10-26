@@ -15,6 +15,12 @@ def eval_metrics(actual, pred, mode = 'test'):
     r2 = r2_score(actual, pred)
     return {f'{mode}_rmse': rmse, f'{mode}_mae': mae, f'{mode}_r2': r2}
 
+def eval_metrics_2(actual, pred, mode = 'test'):
+    rmse = np.sqrt(mean_squared_error(actual, pred))
+    mae = mean_absolute_error(actual, pred)
+    r2 = r2_score(actual, pred)
+    return rmse, mae, r2
+
 def track_run(run_name: str, estimator_name: str, hyperparams: dict, training_metrics: dict, validation_metrics: dict, model: any):
     
     # Auxiliar functions and connection stablishment
@@ -34,7 +40,7 @@ def track_run(run_name: str, estimator_name: str, hyperparams: dict, training_me
 
     active_run = mlflow.active_run()
 
-    # track hypreparameters
+    # track hyperparameters
     for key, value in hyperparams.items():
         mlflow.log_param(key, value)
 

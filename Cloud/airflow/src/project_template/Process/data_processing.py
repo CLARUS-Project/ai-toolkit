@@ -7,6 +7,101 @@ be defined within this script itself or split into different scripts and include
 from sklearn.model_selection import train_test_split
 from typing import Dict, Any
 import pandas as pd
+import datetime
+def process_core(necessary_data_columns_frame,year):
+    x_tag_list = ["SH","Category","Weight","Filling start"]  # source, material type, weight, start time
+    x_array = necessary_data_columns_frame[x_tag_list].values.tolist()
+    end_time_array = necessary_data_columns_frame["Filling end"].tolist()  # end time
+    loading_time_array = necessary_data_columns_frame["Pickup"].tolist()
+    #print(end_time_array)
+    #source_array = necessary_data_columns_frame["Unnamed: 2"].tolist()
+    #mat_list = necessary_data_columns_frame["Unnamed: 3"].tolist()
+    #print(x_array)
+    #print(end_time_array)
+    #print(loading_time_array)
+    # sometimes the start filling ts are changed
+    alt_start_ts = necessary_data_columns_frame["Alt filling start"]
+    alt_start_ts.fillna("", inplace=True)
+    alt_start_ts = alt_start_ts.tolist()
+    trip_tag_array = necessary_data_columns_frame["trip_id"].tolist()
+    #print(trip_tag_array)
+    #license plate
+    ls_plate_array = necessary_data_columns_frame["Plate"].tolist()
+    #arrival to factory time
+    arrival_array = necessary_data_columns_frame["Arrival"].tolist()
+
+    source_tag = {"Atria  Nurmo siipikarja":1,
+                  "HK Scan Rauma":2,
+                  "Atria Sahalahti":3}
+    mat_tag = {"Sekatuote siipikarja luokka 3":1,
+               "Varpaat, Siipikarja, Luokka 3":2}
+
+
+
+    x_array_processed = []
+    y_array_processed = []
+    trip_tag_array_processed = []
+    total_loading_wait_sec=[]
+    counter =0
+    counter_anom = 0
+    anom_count = 0
+    for idx in range(len(x_array)):
+        try:
+            #process source to tag num
+
+            #process start time to seconds
+            if alt_start_ts[idx] != "":
+                start_timestamp_str = alt_start_ts[idx]
+            else:
+                start_timestamp_str = x_array[idx][3]
+
+            start_timestamp = datetime.datetime.strptime(start_timestamp_str, '%Y-%m-%dT%H:%M:%SZ')
+            week_day = start_timestamp.weekday()
+
+            end_timestamp = datetime.datetime.strptime(end_time_array[idx], '%Y-%m-%dT%H:%M:%SZ')
+            first_ts = datetime.datetime(year, 1, 1,0,0,0) #current year, from the first day of a month
+            start_total_second = (start_timestamp-first_ts).total_seconds()
+            loading_wait_delta = datetime.datetime.strptime(loading_time_array[idx],
+                                                            '%Y-%m-%dT%H:%M:%SZ') - end_timestamp
+
+            weight_float = float("".join(x_array[idx][2][:-2]))
+
+            #process time spent to seconds
+
+            total_second_spent = (end_timestamp-start_timestamp).total_seconds()
+            if total_second_spent < 300 or total_second_spent > 60000:
+                anom_count +=1
+                continue
+            if total_second_spent > 0 and total_second_spent < 60:
+                counter+=1
+
+            # 3 input variables structures
+            # x_array_processed.append([day_of_year,weight_float,week_day,source_tag[x_array[idx][0]], mat_tag[x_array[idx][1]], total_sec_from_begining_of_day, start_timestamp.year, start_timestamp.month,start_timestamp.day]) #with weight
+            # x_array_processed.append([day_of_year, week_day, source_tag[x_array[idx][0]], mat_tag[x_array[idx][1]],total_sec_from_begining_of_day, int(year)]) #without weight
+            x_array_processed.append([week_day, source_tag[x_array[idx][0]], mat_tag[x_array[idx][1]], start_timestamp.year, start_timestamp.month,start_timestamp.day, start_timestamp.hour, start_timestamp.minute]) # without weight, detail start timestamp
+            y_array_processed.append(total_second_spent)
+
+            if loading_wait_delta.total_seconds() < -1:
+                counter_anom+=1
+                print(loading_time_array[idx])
+            total_loading_wait_sec.append(loading_wait_delta.total_seconds())
+            trip_tag_array_processed.append(trip_tag_array[idx])
+
+        except Exception as err:
+            print(err, " happened at ",err.__traceback__.tb_lineno)
+            #odd, most if not all filling end ts of source tag 2 are nan
+            pass
+
+    sorted_x_array_processed_data = x_array_processed
+    sorted_y_array_processed_data = y_array_processed
+
+    print("load_anom",str(year), " ", counter)
+    print("load_anom_neg", str(year), " ", counter_anom)
+    print("anom_out_of_bound ", anom_count)
+    print("total valid data ", len(sorted_x_array_processed_data))
+
+
+    return sorted_x_array_processed_data,sorted_y_array_processed_data
 
 def data_processing(df: pd.DataFrame) -> Dict[str, Any]:
     """
@@ -21,6 +116,14 @@ def data_processing(df: pd.DataFrame) -> Dict[str, Any]:
         A dictionary containing the preprocessed data.
     """
 
-   # ADD YOUR CODE HERE
 
-    return {}
+    # ADD YOUR CODE HERE
+    dataset1_x, dataset1_y = process_core(df,2021)
+    dataset1_x_train, dataset1_x_test, dataset1_y_train, dataset1_y_test = train_test_split(dataset1_x,dataset1_y,test_size=0.15, random_state= 1)
+
+
+
+    return {"dataset1_x_train": dataset1_x_train,
+            "dataset1_y_train": dataset1_y_train,
+            "dataset1_x_test": dataset1_x_test,
+            "dataset1_y_test": dataset1_y_test,}
