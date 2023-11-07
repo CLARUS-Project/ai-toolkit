@@ -1,9 +1,8 @@
-# MLFLOW MODEL TRACKING
 MLFLOW_ENDPOINT = 'http://mlflow:5000'
-MLFLOW_EXPERIMENT = "Clarus_RedWine_experiment"
+MLFLOW_EXPERIMENT = 'survival_analysis'
 
 # METRIC FOR BEST MODEL
-METRIC_BM = "r2_validation"
+METRIC_BM = "Validation_concordance_index_ipcw"
 METRIC_BM_TYPE = "max"
 
 # IDS TRUE CONNECTOR INFORMATION
