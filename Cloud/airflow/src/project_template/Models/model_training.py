@@ -15,7 +15,7 @@ import mlflow
 import mlflow.sklearn
 from mlflow.tracking.client import MlflowClient
 from urllib.parse import urlparse
-import config
+#import config
 import time
 import warnings
 from sksurv.metrics import (
@@ -25,7 +25,8 @@ from sksurv.metrics import (
     cumulative_dynamic_auc,
     integrated_brier_score
 )
-from utils import track_run
+
+from Models.utils import track_run
 
 def model_training(data: Dict[str, Any]):
     """

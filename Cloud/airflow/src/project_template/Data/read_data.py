@@ -5,7 +5,7 @@ functions are required to accomplish this step, they can be defined within the s
 scripts and included in the Data directory.
 """
 
-import requests
+#import requests
 import pandas as pd
 import json
 from io import StringIO
