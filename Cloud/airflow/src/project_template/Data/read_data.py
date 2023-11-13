@@ -7,11 +7,7 @@ scripts and included in the Data directory.
 
 #import requests
 import pandas as pd
-import json
-from io import StringIO
-from os.path import abspath
-
-PATH = abspath('Data/turndataset.csv')
+from minio import Minio
 
 def read_data() -> pd.DataFrame:
     """
@@ -22,6 +18,21 @@ def read_data() -> pd.DataFrame:
     """
 
     # ADD YOUR CODE HERE
+    url = "localhost:9000"
+    bucket = "mlflow"
 
-    return pd.read_csv(PATH, index_col=0)
+    client = Minio(
+        url,
+        access_key="user",
+        secret_key="password",
+        secure=False
+    )
 
+    obj = client.get_object(
+        bucket,
+        "turndataset.csv",
+    )
+    return pd.read_csv(obj, index_col=0)
+
+a = read_data()
+print(a)
