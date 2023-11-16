@@ -18,7 +18,7 @@ def read_data() -> pd.DataFrame:
     """
 
     # ADD YOUR CODE HERE
-    url = "localhost:9000"
+    url = "minio:9000"
     bucket = "mlflow"
 
     client = Minio(
@@ -34,5 +34,4 @@ def read_data() -> pd.DataFrame:
     )
     return pd.read_csv(obj, index_col=0)
 
-a = read_data()
-print(a)
+
