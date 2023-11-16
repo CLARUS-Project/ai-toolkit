@@ -15,8 +15,28 @@ def eval_metrics(actual, pred, mode = 'test'):
     r2 = r2_score(actual, pred)
     return {f'{mode}_rmse': rmse, f'{mode}_mae': mae, f'{mode}_r2': r2}
 
-def track_run(run_name: str, estimator_name: str, hyperparams: dict, training_metrics: dict, validation_metrics: dict, model: any):
-    
+
+import numpy as np
+import warnings
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
+import mlflow
+import mlflow.sklearn
+from mlflow.tracking.client import MlflowClient
+from urllib.parse import urlparse
+import time
+
+import config
+
+
+def eval_metrics(actual, pred, mode='test'):
+    rmse = np.sqrt(mean_squared_error(actual, pred))
+    mae = mean_absolute_error(actual, pred)
+    r2 = r2_score(actual, pred)
+    return {f'{mode}_rmse': rmse, f'{mode}_mae': mae, f'{mode}_r2': r2}
+
+
+def track_run(run_name: str, estimator_name: str, hyperparams: dict, training_metrics: dict, validation_metrics: dict,
+              model: any):
     # Auxiliar functions and connection stablishment
     client = MlflowClient(config.MLFLOW_ENDPOINT)
     mlflow.set_tracking_uri(config.MLFLOW_ENDPOINT)
@@ -28,7 +48,7 @@ def track_run(run_name: str, estimator_name: str, hyperparams: dict, training_me
     warnings.filterwarnings('ignore')
 
     mlflow.start_run(
-        run_name = run_name,
+        run_name=run_name,
         tags={'estimator_name': estimator_name}
     )
 
@@ -62,13 +82,12 @@ def track_run(run_name: str, estimator_name: str, hyperparams: dict, training_me
 
     print(f"{run_name}:")
     print("  TRAIN:")
-    print("     RMSE: %s" % training_metrics[tr_keys[0]])
-    print("     MAE: %s" % training_metrics[tr_keys[1]])
-    print("     R2: %s" % training_metrics[tr_keys[2]])
+    print("     Concordance index ipcw: %s" % training_metrics[tr_keys[0]])
+    print("     Integrated Brier Score: %s" % training_metrics[tr_keys[1]])
     print("  VALIDATION:")
-    print("     RMSE: %s" % validation_metrics[tst_keys[0]])
-    print("     MAE: %s" % validation_metrics[tst_keys[1]])
-    print("     R2: %s" % validation_metrics[tst_keys[2]])
+    print("     Concordance index ipcw: %s" % validation_metrics[tst_keys[0]])
+    print("     Integrated Brier Score: %s" % validation_metrics[tst_keys[1]])
+    print("     Mean AUC: %s" % validation_metrics[tst_keys[2]])
 
     # retur the run id
     return active_run
