@@ -9,32 +9,6 @@ import time
 
 import config
 
-def eval_metrics(actual, pred, mode = 'test'):
-    rmse = np.sqrt(mean_squared_error(actual, pred))
-    mae = mean_absolute_error(actual, pred)
-    r2 = r2_score(actual, pred)
-    return {f'{mode}_rmse': rmse, f'{mode}_mae': mae, f'{mode}_r2': r2}
-
-
-import numpy as np
-import warnings
-from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
-import mlflow
-import mlflow.sklearn
-from mlflow.tracking.client import MlflowClient
-from urllib.parse import urlparse
-import time
-
-import config
-
-
-def eval_metrics(actual, pred, mode='test'):
-    rmse = np.sqrt(mean_squared_error(actual, pred))
-    mae = mean_absolute_error(actual, pred)
-    r2 = r2_score(actual, pred)
-    return {f'{mode}_rmse': rmse, f'{mode}_mae': mae, f'{mode}_r2': r2}
-
-
 def track_run(run_name: str, estimator_name: str, hyperparams: dict, training_metrics: dict, validation_metrics: dict,
               model: any):
     # Auxiliar functions and connection stablishment
