@@ -6,7 +6,7 @@ x-common:
   build:
       context: ./airflow
       dockerfile: Dockerfile
-  image: apache/airflow:2.3.0
+  #image: apache/airflow:2.3.0
   user: "${AIRFLOW_UID}:0"
   env_file: 
     - .env

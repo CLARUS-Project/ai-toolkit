@@ -16,7 +16,7 @@ class RestIDSConsumerConnector:
         try:
             headers = {
                         "Content-Type": "application/json",
-                        "Authorization": "Basic Y29ubmVjdG9yOnBhc3N3b3Jk"
+                         "Authorization": "Basic aWRzVXNlcjpwYXNzd29yZA=="
             }
             ret = requests.post(url, data=msg, headers=headers, verify= False, timeout=10)
             logger.debug("POST returned {}".format(ret))
@@ -31,7 +31,7 @@ class RestIDSConsumerConnector:
         #logger.debug("GET Request json = {} target_url = {}".format(msg, url))
         try:
             headers = {
-                        "Authorization": "Basic YWRtaW46cGFzc3dvcmQ="
+                        "Authorization": "Basic YXBpVXNlcjpwYXNzd29yZA=="
             }
             ret = requests.get(url, headers=headers, verify= False, timeout=timeout)
             """  logger.debug("GET returned {}".format(ret)) """

@@ -7,7 +7,7 @@ import sys
 
 def getCatalog(ip, port):
     url = f'https://{ip}:{port}/'
-    auth = ("admin", "password")
+    auth = ("apiUser", "password")
 
     try:
         response = requests.get(url, auth=auth, verify=False)
@@ -22,7 +22,7 @@ def handle_post(filename, description, ids_ip):
     data = getCatalog(ids_ip, port)
     catalog = data['ids:resourceCatalog'][0]['@id']
     url = f'https://{ids_ip}:{port}/api/offeredResource/'
-    auth = ("admin", "password")
+    auth = ("apiUser", "password")
     headers = {
         "catalog": catalog,
     }
