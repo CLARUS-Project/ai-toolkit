@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: create-mlflow-bucket
+  namespace: ${MINIO_NAMESPACE}
+spec:
+  template:
+    metadata:
+      name: create-mlflow-bucket
+    spec:
+      containers:
+      - name: minio-client
+        image: minio/mc:latest
+        command: ["/bin/sh", "-c"]
+        args:
+        - sleep 45;
+          mc config host add minio http://minio.${MINIO_NAMESPACE}.svc.cluster.local:9000 ${MINIO_USER} ${MINIO_PASS};
+          mc mb minio/${MINIO_FIRST_BUCKET};
+          mc mb minio/${MINIO_LOGS_BUCKET};
+      restartPolicy: OnFailure
+  backoffLimit: 3
+  ttlSecondsAfterFinished: 0

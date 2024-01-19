@@ -22,11 +22,20 @@ app = FastAPI()
 @app.get("/predict")
 def deploy_model_predict(datos,model):
 
-    """
-    The function implements the logic to do the inference.
-    """
+    client = MlflowClient(MLFLOW_PATH)
+    mlflow.set_tracking_uri(MLFLOW_PATH)
+    mlflow.set_experiment(MLFLOW_EXPERIMENT)
+    
 
-    # ADD YOUR CODE HERE
+    print('Modelo utilizado para calcular predicciones: ', model)
+    model = f'runs:/{model}/model'
+    model = load_model(model)
+
+    trans_data = np.array([*eval(datos).values()]).reshape(1,-1)
+
+    pred_model = model.predict(trans_data)[0]
+    print('Predicción del modelo: ', pred_model)
+    return float(pred_model)
     
 
 

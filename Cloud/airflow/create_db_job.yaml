@@ -1,0 +1,29 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: create-db-job
+  namespace: ${AIRFLOW_NAMESPACE}
+spec:
+  template:
+    metadata:
+      name: create-db-pod
+    spec:
+      restartPolicy: OnFailure
+      initContainers:
+      - name: init-db-container
+        image: postgres:11
+        env:
+        - name: PGPASSWORD
+          value: "${POSTGRES_ROOT_PASSWORD}"
+        command: ["/bin/sh"]
+        args: ["-c", "psql -h ${POSTGRES_HOST} -U postgres -c \"CREATE DATABASE ${POSTGRES_DATABASE_2};\" -c \"CREATE USER ${POSTGRES_USER_2} WITH PASSWORD '${POSTGRES_PASSWORD_2}';\" -c \"GRANT ALL PRIVILEGES ON DATABASE ${POSTGRES_DATABASE_2} TO ${POSTGRES_USER_2};\""]
+      containers:
+      - name: create-table-container
+        image: postgres:11
+        env:
+        - name: PGPASSWORD
+          value: "${POSTGRES_PASSWORD_2}"
+        command: ["/bin/sh"]
+        args: ["-c", "psql -h ${POSTGRES_HOST} -U ${POSTGRES_USER_2} -d ${POSTGRES_DATABASE_2} -c \"CREATE TABLE best_model_tracking (run_id TEXT, minio_path TEXT, metrics JSON, datetime TIMESTAMP, experiment_id TEXT, PRIMARY KEY (run_id, experiment_id));\""]
+  backoffLimit: 1
+  ttlSecondsAfterFinished: 0

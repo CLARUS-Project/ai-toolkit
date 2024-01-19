@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mlflow-nodeport
+  namespace: ${MLFLOW_NAMESPACE}
+spec:
+  type: NodePort
+  ports:
+    - name: ui
+      port: ${MLFLOW_PORT}
+      targetPort: ${MLFLOW_PORT}
+      nodePort: ${MLFLOW_EXTERNAL_PORT}
+      protocol: TCP
+  selector:
+    app.kubernetes.io/name: mlflow
