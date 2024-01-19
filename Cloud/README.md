@@ -118,9 +118,10 @@ The demo uses IDS so in the .env **it is necessary to specify these variables**:
     * CONNECTOR_EDGE_IP
     * CONNECTOR_CLOUD_IP
 
- Then you just need to run this script and the installation will be done:
+ Then you just need to give execution rights and run this script and the installation will be done:
 
 ```bash
+chmod 777 minio/set_up_minio.sh  airflow/set_up_airflow.sh  mlflow/set_up_mlflow.sh redis/set_up_redis.sh set_up.sh
 ./set_up.sh
 ```
 
