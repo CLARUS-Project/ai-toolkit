@@ -111,14 +111,18 @@ curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="agent --server https://<MASTER_
 
 ### Deploy the platform
 
-The first thing to do is to define the variables in the `.env` file, with the predefined configuration it should load a working demo, to load other DAGs go to the section [Load DAGs](#load-dags).
+The first thing to do is to define the variables in the `.env` file. This configuration is prepared to synchronize with a central repository that has as a submodule with the wine example with IDS.
 
-The demo uses IDS so in the .env **it is necessary to specify these variables**:
+To load the DAG of the demo it is important to **change the value of the environment variable AIRFLOW_GIT_SYNC_REPO and set a token** with access to the central repository, this token must be provided by the central repository maintainer.
+
+The demo uses IDS so deploy [clarus_edge_deploy](https://github.com/CLARUS-Project/clarus_edge_deploy) and [true-connector-trainning](https://github.com/CLARUS-Project/true-connector-trainning), in the .env file **it is necessary to specify these variables**:
 
     * CONNECTOR_EDGE_IP
     * CONNECTOR_CLOUD_IP
 
- Then you just need to give execution rights and run this script and the installation will be done:
+**If another repository is gonna be loaded**, see the [Load DAGs](#load-dags) section for more details..
+
+Then you just need to give execution rights and run this script and the installation will be done:
 
 ```bash
 chmod 777 minio/set_up_minio.sh  airflow/set_up_airflow.sh  mlflow/set_up_mlflow.sh redis/set_up_redis.sh set_up.sh
