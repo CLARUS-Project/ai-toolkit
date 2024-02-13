@@ -300,6 +300,12 @@ env:
   value: "${ECC_API_PORT}"
 - name: "AIRFLOW_VAR_IDS_EXTERNAL_ECC_IDS_PORT"
   value: "${IDS_EXTERNAL_ECC_IDS_PORT}"
+- name: "AIRFLOW_VAR_MLFLOW_ENDPOINT"
+  value: ${MLFLOW_ENDPOINT}
+- name: "AIRFLOW_VAR_MLFLOW_TRACKING_USERNAME"
+  value: ${MLFLOW_TRACKING_USERNAME}
+- name: "AIRFLOW_VAR_MLFLOW_TRACKING_PASSWORD"
+  value: ${MLFLOW_TRACKING_PASSWORD}
 
 # Volumes for all airflow containers
 volumes: []
@@ -2574,6 +2580,7 @@ config:
     enable_proxy_fix: 'True'
     # For Airflow 1.10
     rbac: 'True'
+    auth_backend: airflow.api.auth.backend.basic_auth
   celery:
     flower_url_prefix: '{{ ternary "" .Values.ingress.flower.path (eq .Values.ingress.flower.path "/") }}'
     worker_concurrency: 16

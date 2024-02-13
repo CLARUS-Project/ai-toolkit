@@ -30,7 +30,7 @@ else
     fi
 
     # Instalar el despliegue de Helm "minio" con valores personalizados desde values.yaml
-    helm install minio bitnami/minio --namespace ${MINIO_NAMESPACE} --create-namespace --values "$values_env_file"
+    helm install minio bitnami/minio --namespace ${MINIO_NAMESPACE} --create-namespace --values "$values_env_file" --version 13.4.5
 
     # Esperar a que todos los pods estén en estado "Running"
     echo "Esperando a que todos los pods estén en estado 'Running'..."

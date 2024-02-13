@@ -33,7 +33,7 @@ else
     fi
 
     # Instalar el despliegue de Helm "mlflow" con valores personalizados desde values.yaml
-    helm upgrade --install airflow apache-airflow/airflow --namespace ${AIRFLOW_NAMESPACE} --create-namespace --values "$values_env_file"
+    helm upgrade --install airflow apache-airflow/airflow --namespace ${AIRFLOW_NAMESPACE} --create-namespace --values "$values_env_file" --version 1.12.0
 
     kubectl apply -f $job_file_with_env
     kubectl apply -f $service_file_with_env

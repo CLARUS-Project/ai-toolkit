@@ -2,8 +2,8 @@
 
 values_file=mlflow/values.yaml
 values_env_file=mlflow/values_with_env.yaml
-service_file=mlflow/service.yaml
-service_file_with_env=mlflow/service_env.yaml
+#service_file=mlflow/service.yaml
+#service_file_with_env=mlflow/service_env.yaml
 
 # Sustitución de las variables en values.yaml
 if [ ! -f "$values_file" ]; then
@@ -11,9 +11,9 @@ if [ ! -f "$values_file" ]; then
   exit 1
 fi
 
-kubectl create ns monitoring
+#kubectl create ns monitoring
 envsubst < "$values_file" > "$values_env_file"
-envsubst < "$service_file" > "$service_file_with_env"
+#envsubst < "$service_file" > "$service_file_with_env"
 
 
 # Verificar si ya existe un despliegue de Helm llamado "mlflow"
@@ -29,9 +29,9 @@ else
     fi
 
     # Instalar el despliegue de Helm "mlflow" con valores personalizados desde values.yaml
-    helm install mlflow community-charts/mlflow --namespace ${MLFLOW_NAMESPACE} --create-namespace --values "$values_env_file"
+    helm install mlflow bitnami/mlflow --namespace ${MLFLOW_NAMESPACE} --create-namespace --values "$values_env_file" --version 0.7.6
 
-    kubectl apply -f $service_file_with_env
+    #kubectl apply -f $service_file_with_env
 
     echo "El despliegue de Helm 'mlflow' se ha instalado con éxito."
 fi

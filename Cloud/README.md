@@ -111,16 +111,16 @@ curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="agent --server https://<MASTER_
 
 ### Deploy the platform
 
-The first thing to do is to define the variables in the `.env` file. This configuration is prepared to synchronize with a central repository that has as a submodule with the wine example with IDS.
+The first thing to do is to define the variables in the .env file. This configuration is prepared to synchronize with a central repository that has as a submodule with the wine example with IDS.
 
-To load the DAG of the demo it is important to **change the value of the environment variable AIRFLOW_GIT_SYNC_REPO and set a token** with access to the central repository, this token must be provided by the central repository maintainer.
+To load the DAG of the demo it is important to change the value of the environment variable AIRFLOW_GIT_SYNC_REPO and set a token with access to the central repository, this token must be provided by the central repository maintainer.
 
-The demo uses IDS so deploy [clarus_edge_deploy](https://github.com/CLARUS-Project/clarus_edge_deploy) and [true-connector-trainning](https://github.com/CLARUS-Project/true-connector-trainning), in the .env file **it is necessary to specify these variables**:
+The demo uses IDS so in the .env **it is necessary to specify these variables**:
 
     * CONNECTOR_EDGE_IP
     * CONNECTOR_CLOUD_IP
 
-**If another repository is gonna be loaded**, see the [Load DAGs](#load-dags) section for more details..
+If another repository is gonna be loaded**, see the [Load DAGs](#load-dags) section for more details.
 
 Then you just need to give execution rights and run this script and the installation will be done:
 
@@ -142,6 +142,13 @@ The result should be similar to this:
 It doesn't matter if there have been many restarts, it is usual in this kind of deployments, the important thing is that all pods that are not in the `kube-system` namespace have to be **`READY`**.
 
 **If multiple pods are giving errors it is most likely that the machine where it is being deployed does not have enough resources, the best thing to do is to reset and add an extra node before installation.**
+
+If you are going to use the central repository together with your rbac system you need to run the following script:
+
+```bash
+chmod 700 add_role.sh
+./add_role.sh
+```
 
 **If you want to add more nodes, follow the steps seen in the section [Create the cluster](#create-the-cluster)**.
 

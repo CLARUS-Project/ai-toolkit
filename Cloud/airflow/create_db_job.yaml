@@ -16,7 +16,7 @@ spec:
         - name: PGPASSWORD
           value: "${POSTGRES_ROOT_PASSWORD}"
         command: ["/bin/sh"]
-        args: ["-c", "psql -h ${POSTGRES_HOST} -U postgres -c \"CREATE DATABASE ${POSTGRES_DATABASE_2};\" -c \"CREATE USER ${POSTGRES_USER_2} WITH PASSWORD '${POSTGRES_PASSWORD_2}';\" -c \"GRANT ALL PRIVILEGES ON DATABASE ${POSTGRES_DATABASE_2} TO ${POSTGRES_USER_2};\""]
+        args: ["-c", "psql -h ${POSTGRES_HOST} -U postgres -c \"CREATE DATABASE ${POSTGRES_DATABASE_2};\" -c \"CREATE DATABASE ${POSTGRES_MLFLOW_AUTH};\" -c \"CREATE USER ${POSTGRES_USER_2} WITH PASSWORD '${POSTGRES_PASSWORD_2}';\" -c \"GRANT ALL PRIVILEGES ON DATABASE ${POSTGRES_DATABASE_2} TO ${POSTGRES_USER_2};\" -c \"GRANT ALL PRIVILEGES ON DATABASE ${POSTGRES_MLFLOW_AUTH} TO ${POSTGRES_USER_2};\""]
       containers:
       - name: create-table-container
         image: postgres:11

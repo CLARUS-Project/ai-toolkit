@@ -25,7 +25,7 @@ else
     fi
 
     # Instalar el despliegue de Helm "mlflow" con valores personalizados desde values.yaml
-    helm install redis bitnami/redis --namespace ${REDIS_NAMESPACE} --create-namespace --values "$values_env_file"
+    helm install redis bitnami/redis --namespace ${REDIS_NAMESPACE} --create-namespace --values "$values_env_file" --version 18.7.0
 
     echo "El despliegue de Helm 'redis' se ha instalado con éxito."
 fi
